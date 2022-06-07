@@ -10,6 +10,7 @@ use App\Models\TaskCategory;
 
 class CategoryController extends BaseController
 {
+
     /** @var CategoryRepositoryInterface */
     private $repository;
     private $model;
@@ -22,8 +23,21 @@ class CategoryController extends BaseController
 
     /**
      * Display a listing of the resource.
-     *
      * @return string
+     *
+     * @OA\Get(
+     *     path="/api/categories",
+     *     tags={"Categories"},
+     *     summary="Category list",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Category list"
+     *     ),
+     *     @OA\Response(
+     *         response="default",
+     *         description="Error."
+     *     )
+     * )
      */
     public function index()
     {
@@ -38,10 +52,32 @@ class CategoryController extends BaseController
     }
 
     /**
+
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return string
+     *
+     *  @OA\Post(
+     *      path="/api/categories",
+     *      summary="Create a category",
+     *      tags={"Categories"},
+     *      @OA\RequestBody(
+     *          required=true,
+     *          description="Pass the category data",
+     *          @OA\JsonContent(
+     *              type="object", ref="#/components/schemas/Category"
+     *          ),
+     *      ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Category created"
+     *     ),
+     *     @OA\Response(
+     *         response="default",
+     *         description="Error."
+     *     )
+     * )
      */
     public function store(Request $request)
     {
@@ -69,9 +105,34 @@ class CategoryController extends BaseController
 
     /**
      * Display the specified resource.
-     *
      * @param  int  $id
      * @return string
+     *
+     * @OA\Get(
+     *     path="/api/categories/{id}",
+     *     tags={"Categories"},
+     *     summary="Get category by id",
+     *     @OA\Parameter(
+     *         description="Category Id",
+     *         in="path",
+     *         name="id",
+     *         required=true,
+     *         @OA\Schema(type="string"),
+     *         @OA\Examples(example="int", value="1", summary="Category Id.")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Get category by id."
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Category not found."
+     *     ),
+     *     @OA\Response(
+     *         response="default",
+     *         description="Error."
+     *     )
+     * )
      */
     public function show($id)
     {
@@ -90,11 +151,45 @@ class CategoryController extends BaseController
     }
 
     /**
+
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return string
+     *
+     *   @OA\Put(
+     *      path="/api/categories/{id}",
+     *      summary="Update a category",
+     *      tags={"Categories"},
+     *      @OA\Parameter(
+     *         description="Category Id",
+     *         in="path",
+     *         name="id",
+     *         required=true,
+     *         @OA\Schema(type="string"),
+     *         @OA\Examples(example="int", value="1", summary="Category Id")
+     *      ),
+     *      @OA\RequestBody(
+     *          required=true,
+     *          description="Pass the category data",
+     *          @OA\JsonContent(
+     *              type="object", ref="#/components/schemas/Category"
+     *          ),
+     *      ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Category updated"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Category id not found."
+     *     ),
+     *     @OA\Response(
+     *         response="default",
+     *         description="Error."
+     *     )
+     * )
      */
     public function update(Request $request, $id)
     {
@@ -122,6 +217,32 @@ class CategoryController extends BaseController
      *
      * @param  int  $id
      * @return string
+     *
+     *  @OA\Delete(
+     *     path="/api/categories/{id}",
+     *     tags={"Categories"},
+     *     summary="Delete category by id",
+     *     @OA\Parameter(
+     *         description="Category Id",
+     *         in="path",
+     *         name="id",
+     *         required=true,
+     *         @OA\Schema(type="string"),
+     *         @OA\Examples(example="int", value="1", summary="Category Id")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Delete category by id."
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Category not found."
+     *     ),
+     *     @OA\Response(
+     *         response="default",
+     *         description="Error."
+     *     )
+     * )
      */
     public function destroy($id)
     {

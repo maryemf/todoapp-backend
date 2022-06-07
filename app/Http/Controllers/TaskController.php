@@ -20,10 +20,23 @@ class TaskController extends BaseController
         $this->model = new Task();
     }
 
-    /**
+   /**
      * Display a listing of the resource.
-     *
      * @return string
+     *
+     * @OA\Get(
+     *     path="/api/tasks",
+     *     tags={"Tasks"},
+     *     summary="Task list",
+     *     @OA\Response(
+     *         response=200,
+     *         description="Task list"
+     *     ),
+     *     @OA\Response(
+     *         response="default",
+     *         description="Error."
+     *     )
+     * )
      */
     public function index()
     {
@@ -38,10 +51,32 @@ class TaskController extends BaseController
     }
 
     /**
+
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @return string
+     *
+     *  @OA\Post(
+     *      path="/api/tasks",
+     *      summary="Create a task",
+     *      tags={"Tasks"},
+     *      @OA\RequestBody(
+     *          required=true,
+     *          description="Pass the task data",
+     *          @OA\JsonContent(
+     *              type="object", ref="#/components/schemas/Task"
+     *          ),
+     *      ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Task created"
+     *     ),
+     *     @OA\Response(
+     *         response="default",
+     *         description="Error."
+     *     )
+     * )
      */
     public function store(Request $request)
     {
@@ -74,9 +109,34 @@ class TaskController extends BaseController
 
     /**
      * Display the specified resource.
-     *
      * @param  int  $id
      * @return string
+     *
+     * @OA\Get(
+     *     path="/api/tasks/{id}",
+     *     tags={"Tasks"},
+     *     summary="Get task by id",
+     *     @OA\Parameter(
+     *         description="Task Id",
+     *         in="path",
+     *         name="id",
+     *         required=true,
+     *         @OA\Schema(type="string"),
+     *         @OA\Examples(example="int", value="1", summary="Task Id.")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Get task by id."
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Task not found."
+     *     ),
+     *     @OA\Response(
+     *         response="default",
+     *         description="Error."
+     *     )
+     * )
      */
     public function show($id)
     {
@@ -95,11 +155,45 @@ class TaskController extends BaseController
     }
 
     /**
+
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  int  $id
      * @return string
+     *
+     *   @OA\Put(
+     *      path="/api/tasks/{id}",
+     *      summary="Update a task",
+     *      tags={"Tasks"},
+     *      @OA\Parameter(
+     *         description="Task Id",
+     *         in="path",
+     *         name="id",
+     *         required=true,
+     *         @OA\Schema(type="string"),
+     *         @OA\Examples(example="int", value="1", summary="Task Id")
+     *      ),
+     *      @OA\RequestBody(
+     *          required=true,
+     *          description="Pass the task data",
+     *          @OA\JsonContent(
+     *              type="object", ref="#/components/schemas/Task"
+     *          ),
+     *      ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Task updated"
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Task id not found."
+     *     ),
+     *     @OA\Response(
+     *         response="default",
+     *         description="Error."
+     *     )
+     * )
      */
     public function update(Request $request, $id)
     {
@@ -133,6 +227,32 @@ class TaskController extends BaseController
      *
      * @param  int  $id
      * @return string
+     *
+     *  @OA\Delete(
+     *     path="/api/tasks/{id}",
+     *     tags={"Tasks"},
+     *     summary="Delete task by id",
+     *     @OA\Parameter(
+     *         description="Task Id",
+     *         in="path",
+     *         name="id",
+     *         required=true,
+     *         @OA\Schema(type="string"),
+     *         @OA\Examples(example="int", value="1", summary="Task Id")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Delete task by id."
+     *     ),
+     *     @OA\Response(
+     *         response=404,
+     *         description="Task not found."
+     *     ),
+     *     @OA\Response(
+     *         response="default",
+     *         description="Error."
+     *     )
+     * )
      */
     public function destroy($id)
     {
@@ -150,7 +270,36 @@ class TaskController extends BaseController
         }
     }
 
-    public function filterByCategory($id){
+    /**
+     * Filter tasks by category Id.
+     *
+     * @param  int  $id
+     * @return string
+     *
+     *  @OA\Delete(
+     *     path="/api/tasks/category/{id}",
+     *     tags={"Tasks"},
+     *     summary="Filter tasks by category Id",
+     *     @OA\Parameter(
+     *         description="Category Id",
+     *         in="path",
+     *         name="id",
+     *         required=true,
+     *         @OA\Schema(type="string"),
+     *         @OA\Examples(example="int", value="1", summary="Category Id")
+     *     ),
+     *     @OA\Response(
+     *         response=200,
+     *         description="Data filtered."
+     *     ),
+     *     @OA\Response(
+     *         response="default",
+     *         description="Error."
+     *     )
+     * )
+     */
+
+    public function filterByTask($id){
         try{
             $data = $this->repository->findByCategory($id);
             return $this->sendResponseOk(TaskResource::collection($data));
