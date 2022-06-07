@@ -68,4 +68,14 @@ class TaskRepository implements TaskRepositoryInterface
 
         return false;
     }
+
+
+    public function findByCategory($id)
+    {
+        $tasks = $this->model->with(['categories' => function ($query) use ($id) {
+            $query->where('category_id', $id);
+        }])->get();
+
+        return $tasks;
+    }
 }

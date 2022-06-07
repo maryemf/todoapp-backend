@@ -21,7 +21,9 @@ class Task extends Model
         'name',
         'description',
         'start_date',
-        'end_date'
+        'end_date',
+        'is_complete',
+        'completed_date'
     ];
 
 

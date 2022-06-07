@@ -13,7 +13,7 @@ change the database connection parameters
 3.- run: php artisan migrate to create the tables
 
 ## run de application
-run: php artisan serve --port=3010 this url is used for the front-end application
+run: php artisan serve --port=3020 this url is used for the front-end application
 
 ## swagger
 for swagger page go to ....

@@ -18,8 +18,10 @@ class TaskResource extends JsonResource
             'id' => $this->id,
             'name' => $this->name,
             'description' => $this->description,
-            'start_date' => $this->created_at,
-            'end_date' => $this->created_at,
+            'is_complete' => $this->is_complete,
+            'completed_date' => $this->completed_date,
+            'start_date' => $this->start_date,
+            'end_date' => $this->end_date,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
             'categories' => $this->categories

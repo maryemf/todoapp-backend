@@ -31,6 +31,7 @@ Route::controller(CategoryController::class)->group(function () {
 
 Route::controller(TaskController::class)->group(function () {
     Route::get('/tasks', 'index');
+    Route::get('/tasks/category/{id}', 'filterByCategory');
     Route::get('/tasks/{id}', 'show');
     Route::post('/tasks', 'store');
     Route::put('/tasks/{id}', 'update');

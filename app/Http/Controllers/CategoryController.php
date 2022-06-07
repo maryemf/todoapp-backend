@@ -30,8 +30,10 @@ class CategoryController extends BaseController
         try{
             $data = $this->repository->all();
             return $this->sendResponseOk(CategoryResource::collection($data));
+        } catch (\Illuminate\Database\QueryException $ex) {
+            return $this->sendResponseError('SQL error in current operation');
         } catch (\Exception $ex) {
-            return $this->sendResponseError($ex->getMessage());
+            return $this->sendResponseError($ex->getMessage(), 404);
         }
     }
 
@@ -45,15 +47,18 @@ class CategoryController extends BaseController
     {
         try{
             $input = $this->model->filterFields($request->all());
+            $input['color'] = '#' . substr(str_shuffle('ABCDEF0123456789'), 0, 6);
 
             $exist = $this->repository->validateExist('name = ? ', [$input['name']] );
 
             if ($exist){
-                return $this->sendResponseMessage("error", "UNIQUE constraint failed");
+                return $this->sendResponseError( "UNIQUE constraint failed");
             }
             try {
                 $reg = $this->repository->create($input);
                 return $this->sendResponseOk(new CategoryResource($reg), 'Category created');
+            } catch (\Illuminate\Database\QueryException $ex) {
+                return $this->sendResponseError('SQL error in current operation');
             } catch (\Exception $ex) {
                 return $this->sendResponseError($ex->getMessage());
             }
@@ -77,8 +82,10 @@ class CategoryController extends BaseController
                 return $this->sendResponseError("Category {$id} not found", 404);
             }
             return $this->sendResponseOk(new CategoryResource($data));
+        } catch (\Illuminate\Database\QueryException $ex) {
+            return $this->sendResponseError('SQL error in current operation');
         } catch (\Exception $ex) {
-            return $this->sendResponseError($ex->getMessage());
+            return $this->sendResponseError($ex->getMessage(), 404);
         }
     }
 
@@ -103,6 +110,8 @@ class CategoryController extends BaseController
             $reg = $this->repository->update($input, $id);
 
             return $this->sendResponseOk(new CategoryResource($reg), "Category updated");
+        } catch (\Illuminate\Database\QueryException $ex) {
+            return $this->sendResponseError('SQL error in current operation');
         } catch (\Exception $ex) {
             return $this->sendResponseError($ex->getMessage(), 404);
         }
@@ -127,8 +136,10 @@ class CategoryController extends BaseController
             }
             $this->repository->delete($id);
             return $this->sendResponseMessage("message", "Category deleted");
+        } catch (\Illuminate\Database\QueryException $ex) {
+            return $this->sendResponseError('SQL error in current operation');
         } catch (\Exception $ex) {
-            return $this->sendResponseError($ex->getMessage());
+            return $this->sendResponseError($ex->getMessage(), 404);
         }
     }
 }

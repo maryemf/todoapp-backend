@@ -30,6 +30,8 @@ class TaskController extends BaseController
         try{
             $data = $this->repository->all();
             return $this->sendResponseOk(TaskResource::collection($data));
+        } catch (\Illuminate\Database\QueryException $ex) {
+            return $this->sendResponseError('SQL error in current operation');
         } catch (\Exception $ex) {
             return $this->sendResponseError($ex->getMessage());
         }
@@ -60,6 +62,8 @@ class TaskController extends BaseController
                 $reg = $this->repository->create($input, $attach);
 
                 return $this->sendResponseOk(new TaskResource($reg), 'Task created');
+            } catch (\Illuminate\Database\QueryException $ex) {
+                return $this->sendResponseError('SQL error in current operation');
             } catch (\Exception $ex) {
                 return $this->sendResponseError($ex->getMessage());
             }
@@ -83,8 +87,10 @@ class TaskController extends BaseController
                 return $this->sendResponseError("Task {$id} not found", 404);
             }
             return $this->sendResponseOk(new TaskResource($data));
+        } catch (\Illuminate\Database\QueryException $ex) {
+            return $this->sendResponseError('SQL error in current operation');
         } catch (\Exception $ex) {
-            return $this->sendResponseError($ex->getMessage());
+            return $this->sendResponseError($ex->getMessage(), 404);
         }
     }
 
@@ -115,6 +121,8 @@ class TaskController extends BaseController
             $reg = $this->repository->update($input, $id, $attach);
 
             return $this->sendResponseOk(new TaskResource($reg), "Task updated");
+        } catch (\Illuminate\Database\QueryException $ex) {
+            return $this->sendResponseError('SQL error in current operation');
         } catch (\Exception $ex) {
             return $this->sendResponseError($ex->getMessage(), 404);
         }
@@ -135,8 +143,21 @@ class TaskController extends BaseController
             }
             $this->repository->delete($id);
             return $this->sendResponseMessage("message", "Task deleted");
+        } catch (\Illuminate\Database\QueryException $ex) {
+            return $this->sendResponseError('SQL error in current operation');
         } catch (\Exception $ex) {
-            return $this->sendResponseError($ex->getMessage());
+            return $this->sendResponseError($ex->getMessage(), 404);
+        }
+    }
+
+    public function filterByCategory($id){
+        try{
+            $data = $this->repository->findByCategory($id);
+            return $this->sendResponseOk(TaskResource::collection($data));
+        } catch (\Illuminate\Database\QueryException $ex) {
+            return $this->sendResponseError('SQL error in current operation');
+        } catch (\Exception $ex) {
+            return $this->sendResponseError($ex->getMessage(), 404);
         }
     }
 }
